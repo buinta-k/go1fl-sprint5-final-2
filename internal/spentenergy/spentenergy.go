@@ -29,7 +29,7 @@ func RunningSpentCalories(steps int, weight, height float64, duration time.Durat
 	}
 	speed:=MeanSpeed(steps,height,duration)
 	durationInMinutes:=duration.Minutes()
-	return =(weight*speed*durationInMinutes)/minInH, nil
+	return (weight*speed*durationInMinutes)/minInH, nil
 }
 
 func MeanSpeed(steps int, height float64, duration time.Duration) float64 {
