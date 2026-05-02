@@ -40,9 +40,9 @@ func (t Training) ActionInfo() (string, error) {
 	speed:=MeanSpeed(t.Steps, t.Height, t.Duration)
 	var calory float64
 	if t.TrainingType == "Бег" {
-    calory = RunningSpentCalories(t.Steps, t.Weight, t.Height, t.Duration)
+    calory = spentenergy.RunningSpentCalories(t.Steps, t.Weight, t.Height, t.Duration)
 	} else if t.TrainingType == "Ходьба" { // Добавили else тут
-    calory = WalkingSpentCalories(t.Steps, t.Weight, t.Height, t.Duration)
+    calory = spentenergy.WalkingSpentCalories(t.Steps, t.Weight, t.Height, t.Duration)
 	} else {
     return "", fmt.Errorf("Неизвестный тип тренировки")
 }
