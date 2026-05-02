@@ -6,13 +6,13 @@ import (
 )
 
 type DataParser interface {
-	Parse()
-	ActionInfo()
+	Parse(datastring string) error
+	ActionInfo() (string,error)
 }
 
 func Info(dataset []string, dp DataParser) {
 	for _,val:=range dataset {
-		res,err:=dp.Parse(val)
+		err:=dp.Parse(val)
 		if err!=nil {
 			log.Print("Ошибка париснга")
 			continue
@@ -22,5 +22,6 @@ func Info(dataset []string, dp DataParser) {
 			log.Print("Ошибка парсинга")
 			continue
 		}
+		fmt.Println(info)
 	}
 }
