@@ -20,7 +20,7 @@ func WalkingSpentCalories(steps int, weight, height float64, duration time.Durat
 	}
 	speed:=MeanSpeed(steps,height,duration)
 	durationInMinutes := duration.Minutes()
-	result := (weight * meanSpeed * durationInMinutes) / minInH
+	result := (weight * speed * durationInMinutes) / minInH
 	return result * walkingCaloriesCoefficient, nil
 }
 
