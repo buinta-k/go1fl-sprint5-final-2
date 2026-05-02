@@ -13,7 +13,7 @@ import (
 type Training struct {
 	Steps int
 	TrainingType string
-	Duration time.duration
+	Duration time.Duration
 	personaldata.Personal
 }
 
@@ -31,17 +31,18 @@ func (t *Training) Parse(datastring string) (err error) {
 	if err2!=nil {
 		fmt.Errorf("Ошибка преобразования string в duration")
 	}
+	return nil
 }
 
 func (t Training) ActionInfo() (string, error) {
 	distance:=Distance(t.Steps, t.Height)
 	speed:=MeanSpeed(t.Steps, t.Height, t.Duration)
-
+	var calory int
 	if t.TrainingType=="Бег" {
-		calory:=RunningSpentCalories(t.Steps, t.Weight, t.Height, t.Duration)
+		calory=RunningSpentCalories(t.Steps, t.Weight, t.Height, t.Duration)
 	}
 	if t.TrainingType=="Ходьба" {
-		calory:=WalkingSpentCalories(t.Steps, t.Weight, t.Height, t.Duration)
+		calory=WalkingSpentCalories(t.Steps, t.Weight, t.Height, t.Duration)
 	} else {
 		return "",fmt.Errorf("Неизвестный тип тренировки")
 	}
