@@ -12,7 +12,7 @@ type Personal struct {
 
 func (p Personal) Print() {
 	fmt.Printf(
-		"Имя: %s\nВес: %.2f кг.\nРост: %.2fм.\n",
+		"Имя: %s\nВес: %.2f\nРост: %.2f\n",
 		p.Name,
 		p.Weight,
 		p.Height,
