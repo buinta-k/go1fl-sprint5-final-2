@@ -29,7 +29,7 @@ func (t *Training) Parse(datastring string) (err error) {
 	t.TrainingType=str[1]
 	hours, err2:=time.ParseDuration(str[2])
 	if err2!=nil {
-		fmt.Errorf("Ошибка преобразования string в duration")
+		return fmt.Errorf("Ошибка преобразования string в duration")
 	}
 	t.Duration = hours
 	return nil
@@ -39,6 +39,7 @@ func (t Training) ActionInfo() (string, error) {
 	distance:=spentenergy.Distance(t.Steps, t.Height)
 	speed:=spentenergy.MeanSpeed(t.Steps, t.Height, t.Duration)
 	var calory float64
+	var err error
 	if t.TrainingType == "Бег" {
     calory,err = spentenergy.RunningSpentCalories(t.Steps, t.Weight, t.Height, t.Duration)
 	} else if t.TrainingType == "Ходьба" { // Добавили else тут
@@ -48,7 +49,7 @@ func (t Training) ActionInfo() (string, error) {
 	}
 
 	if err!=nil {
-		return "",fmt.Errorf("Ошибка преобразования")
+		return "",err
 	}
 	
 	result:=fmt.Sprintf(
