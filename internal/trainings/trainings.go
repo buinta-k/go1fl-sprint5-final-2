@@ -36,16 +36,21 @@ func (t *Training) Parse(datastring string) (err error) {
 }
 
 func (t Training) ActionInfo() (string, error) {
-	distance:=Distance(t.Steps, t.Height)
-	speed:=MeanSpeed(t.Steps, t.Height, t.Duration)
+	distance:=spentenergy.Distance(t.Steps, t.Height)
+	speed:=spentenergy.MeanSpeed(t.Steps, t.Height, t.Duration)
 	var calory float64
 	if t.TrainingType == "Бег" {
-    calory = spentenergy.RunningSpentCalories(t.Steps, t.Weight, t.Height, t.Duration)
+    calory,err = spentenergy.RunningSpentCalories(t.Steps, t.Weight, t.Height, t.Duration)
 	} else if t.TrainingType == "Ходьба" { // Добавили else тут
-    calory = spentenergy.WalkingSpentCalories(t.Steps, t.Weight, t.Height, t.Duration)
+    calory,err = spentenergy.WalkingSpentCalories(t.Steps, t.Weight, t.Height, t.Duration)
 	} else {
     return "", fmt.Errorf("Неизвестный тип тренировки")
-}
+	}
+
+	if err!=nil {
+		return "",fmt.Errorf("Ошибка преобразования")
+	}
+	
 	result:=fmt.Sprintf(
 		"Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n",
 		t.TrainingType,
