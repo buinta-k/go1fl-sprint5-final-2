@@ -52,7 +52,7 @@ func (t Training) ActionInfo() (string, error) {
 		t.Duration.Hours(),
 		distance,
 		speed,
-		calory
+		calory,
 	)
 	return result, nil
 }
