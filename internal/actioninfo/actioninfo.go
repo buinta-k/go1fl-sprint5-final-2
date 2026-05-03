@@ -22,6 +22,6 @@ func Info(dataset []string, dp DataParser) {
 			log.Print("Ошибка парсинга")
 			continue
 		}
-		fmt.Println(info)
+		fmt.Print(info)
 	}
 }
