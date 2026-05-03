@@ -1,12 +1,13 @@
 package daysteps
 
 import (
-    "fmt"
-    "strconv"
-    "strings"
-    "time"
-    "github.com/Yandex-Practicum/tracker/internal/personaldata"
-    "github.com/Yandex-Practicum/tracker/internal/spentenergy"
+	"fmt"
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/Yandex-Practicum/tracker/internal/personaldata"
+	"github.com/Yandex-Practicum/tracker/internal/spentenergy"
 )
 
 type DaySteps struct {
@@ -15,45 +16,49 @@ type DaySteps struct {
 	personaldata.Personal
 }
 
-func (ds *DaySteps) Parse(datastring string) (err error) {
+func (d *DaySteps) Parse(datastring string) error {
 	data := strings.Split(datastring, ",")
 	if len(data) != 2 {
-		return fmt.Errorf("длина слайса не равна 2")
+		return fmt.Errorf("invalid format")
 	}
 
-	steps, err2 := strconv.Atoi(data[0])
-	if err2 != nil {
-		return fmt.Errorf("ошибка преобразования string в int")
+	steps, err := strconv.Atoi(data[0])
+	if err != nil || steps <= 0 {
+		return fmt.Errorf("invalid steps")
 	}
 
-	if steps <= 0 {
-		return fmt.Errorf("шаги должны быть больше 0")
+	durStr := strings.TrimSpace(data[1])
+
+	dur, err := time.ParseDuration(durStr)
+	if err != nil || dur <= 0 {
+		return fmt.Errorf("invalid duration")
 	}
 
-	hours, err3 := time.ParseDuration(data[1])
-	if err3 != nil {
-		return fmt.Errorf("ошибка преобразования string в duration")
-	}
-
-	if hours <= 0 {
-		return fmt.Errorf("длительность должна быть больше 0")
-	}
-
-	ds.Steps = steps
-	ds.Duration = hours
+	d.Steps = steps
+	d.Duration = dur
 	return nil
 }
 
-func (ds DaySteps) ActionInfo() (string, error) {
+func (ds *DaySteps) ActionInfo() (string, error) {
 	distance := spentenergy.Distance(ds.Steps, ds.Height)
-	calory, err := spentenergy.WalkingSpentCalories(ds.Steps, ds.Weight, ds.Height, ds.Duration)
+
+	calories, err := spentenergy.WalkingSpentCalories(
+		ds.Steps,
+		ds.Weight,
+		ds.Height,
+		ds.Duration,
+	)
 	if err != nil {
-		return "", fmt.Errorf("ошибка вычисления функции")
+		return "", err
 	}
 
 	result := fmt.Sprintf(
-		"Количество шагов: %d\nДистанция составила: %.2f км\nВы сожгли: %.2f ккал\n",
-		ds.Steps, distance, calory,
+		"Количество шагов: %d.\nДистанция составила %.2f км.\nВы сожгли %.2f ккал.\n",
+		ds.Steps,
+		distance,
+		calories,
 	)
+
 	return result, nil
 }
+
