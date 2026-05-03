@@ -18,19 +18,29 @@ type Training struct {
 }
 
 func (t *Training) Parse(datastring string) (err error) {
-	str:=strings.Split(datastring,",")
-	if len(str)!=3 {
+	str := strings.Split(datastring, ",")
+	if len(str) != 3 {
 		return fmt.Errorf("Длина слайса не равна 3")
 	}
-	t.Steps,err=strconv.Atoi(str[0]) 
-	if err!=nil{
+
+	t.Steps, err = strconv.Atoi(str[0])
+	if err != nil {
 		return fmt.Errorf("Ошибка преобразования string в int")
 	}
-	t.TrainingType=str[1]
-	hours, err2:=time.ParseDuration(str[2])
-	if err2!=nil {
+	if t.Steps <= 0 {
+		return fmt.Errorf("количество шагов должно быть больше нуля")
+	}
+
+	t.TrainingType = str[1]
+
+	hours, err2 := time.ParseDuration(str[2])
+	if err2 != nil {
 		return fmt.Errorf("Ошибка преобразования string в duration")
 	}
+	if hours <= 0 {
+		return fmt.Errorf("длительность тренировки должна быть больше нуля")
+	}
+
 	t.Duration = hours
 	return nil
 }
