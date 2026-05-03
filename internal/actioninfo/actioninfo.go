@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 )
-
 type DataParser interface {
 	Parse(datastring string) error
 	ActionInfo() (string,error)
