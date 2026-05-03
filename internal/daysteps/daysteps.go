@@ -16,49 +16,45 @@ type DaySteps struct {
 	personaldata.Personal
 }
 
-func (d *DaySteps) Parse(datastring string) error {
+func (ds *DaySteps) Parse(datastring string) (err error) {
 	data := strings.Split(datastring, ",")
 	if len(data) != 2 {
-		return fmt.Errorf("invalid format")
+		return fmt.Errorf("Длина слайса не равна 2")
 	}
 
-	steps, err := strconv.Atoi(data[0])
-	if err != nil || steps <= 0 {
-		return fmt.Errorf("invalid steps")
+	steps, err2 := strconv.Atoi(data[0])
+	if err2 != nil {
+		return fmt.Errorf("Ошибка преобразования string в int")
 	}
 
-	durStr := strings.TrimSpace(data[1])
-
-	dur, err := time.ParseDuration(durStr)
-	if err != nil || dur <= 0 {
-		return fmt.Errorf("invalid duration")
+	if steps <= 0 {
+		return fmt.Errorf("количество шагов должно быть больше нуля")
 	}
 
-	d.Steps = steps
-	d.Duration = dur
+	hours, err3 := time.ParseDuration(data[1])
+	if err3 != nil {
+		return fmt.Errorf("Ошибка преобразования string в duration")
+	}
+
+	if hours <= 0 {
+		return fmt.Errorf("длительность должна быть больше нуля")
+	}
+
+	ds.Steps = steps
+	ds.Duration = hours
 	return nil
 }
 
-func (ds *DaySteps) ActionInfo() (string, error) {
+func (ds DaySteps) ActionInfo() (string, error) {
 	distance := spentenergy.Distance(ds.Steps, ds.Height)
-
-	calories, err := spentenergy.WalkingSpentCalories(
-		ds.Steps,
-		ds.Weight,
-		ds.Height,
-		ds.Duration,
-	)
+	calory, err := spentenergy.WalkingSpentCalories(ds.Steps, ds.Weight, ds.Height, ds.Duration)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("Ошибка вычисления функции")
 	}
 
 	result := fmt.Sprintf(
-		"Количество шагов: %d.\nДистанция составила %.2f км.\nВы сожгли %.2f ккал.\n",
-		ds.Steps,
-		distance,
-		calories,
+		"Количество шагов %d.\nДистанция составила %.2f км.\nВы сожгли %.2f ккал.\n",
+		ds.Steps, distance, calory,
 	)
-
 	return result, nil
 }
-
