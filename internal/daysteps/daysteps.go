@@ -18,21 +18,29 @@ type DaySteps struct {
 }
 
 func (ds *DaySteps) Parse(datastring string) (err error) {
-	data:=strings.Split(datastring,",")
-	if len(data)!=2 {
+	data := strings.Split(datastring, ",")
+	if len(data) != 2 {
 		return fmt.Errorf("Длина слайса не равна 2")
 	}
-	steps,err2:=strconv.Atoi(data[0])
-	if err2!=nil {
+
+	steps, err2 := strconv.Atoi(data[0])
+	if err2 != nil {
 		return fmt.Errorf("Ошибка преобразования string в int")
 	}
-	hours,err3:=time.ParseDuration(data[1])
-	if err3!=nil {
-		return fmt.Errorf("Ошибка преобразования string в duration")
+	if steps <= 0 {
+		return fmt.Errorf("количество шагов должно быть больше нуля")
 	}
 
-	ds.Steps=steps
-	ds.Duration=hours
+	hours, err3 := time.ParseDuration(data[1])
+	if err3 != nil {
+		return fmt.Errorf("Ошибка преобразования string в duration")
+	}
+	if hours <= 0 {
+		return fmt.Errorf("длительность должна быть больше нуля")
+	}
+
+	ds.Steps = steps
+	ds.Duration = hours
 	return nil
 }
 
