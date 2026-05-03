@@ -1,13 +1,12 @@
 package daysteps
 
 import (
-	"fmt"
-	"strconv"
-	"strings"
-	"time"
-
-	"://github.com"
-	"://github.com"
+    "fmt"
+    "strconv"
+    "strings"
+    "time"
+    "github.com/Yandex-Practicum/tracker/internal/personaldata"
+    "github.com/Yandex-Practicum/tracker/internal/spentenergy"
 )
 
 type DaySteps struct {
